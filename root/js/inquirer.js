@@ -8,7 +8,7 @@ const mainPrompt = [{
     name: "table-select",
     type: "list",
     message: `Select the table you would like to use`,
-    choices: ["Department", "Role", "Employee"]
+    choices: ["department", "role", "employee"]
 }];
 
 

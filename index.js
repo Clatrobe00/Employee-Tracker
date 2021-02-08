@@ -13,10 +13,20 @@ const actionSwitch = (a) => {
     case 'View':
       db.query(`SELECT * FROM ${a['table-select']}`, (err, result) => {if (err) throw err;
       console.table(result)
-    });
+      });
       break;
-  
+    case 'Update':
+      console.log(`update ${a['table-select']}`);
+      break;
+    case 'Add':
+      console.log(`add ${a['table-select']}`);
+      db.query(`INSERT INTO ${a['table-select']} (name) VALUES ('marketing')`, function (err) {
+        if (err) throw err;
+        console.log("1 record inserted");
+      });
+      break;
     default:
+      console.log('oops!');
       break;
   }
 }
