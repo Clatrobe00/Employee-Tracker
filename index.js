@@ -1,12 +1,17 @@
 const inquirer = require('inquirer');
-const mainPrompt = require('./root/js/inquirer');
-const secondPrompt = require('./root/js/inquirer');
-
+const i = require('./root/js/inquirer');
+const db = require('./root/js/connection');
 async function iHandler() {
-  const action = await inquirer.prompt(mainPrompt);
-  console.log(action);
+  const primePrompt = await inquirer.prompt(i.mainPrompt);
+  console.log(primePrompt);
 }
 
 iHandler();
+// db.connection;
+
+db.connect(function(err) {
+  if (err) throw err;
+  console.log(`connected on ${db.threadId}`);
+});
 
 

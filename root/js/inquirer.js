@@ -3,8 +3,8 @@ const mainPrompt = [{
     type: "list",
     message: "Select the action you would like to take",
     choices: ["Add", "View", "Update"]
-}];
-const secondPrompt = [{
+},
+{
     name: "table-select",
     type: "list",
     message: `Select the table you would like to use`,
@@ -13,4 +13,4 @@ const secondPrompt = [{
 
 
 
-module.exports = {mainPrompt, secondPrompt}
+module.exports = {mainPrompt}
