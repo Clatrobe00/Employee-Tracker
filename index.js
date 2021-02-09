@@ -20,10 +20,11 @@ async function actionSwitch (a) {
       break;
     case 'Add':
       const addEl = await addToTable(`${a['table-select']}`);
-      // db.query(`INSERT INTO ${a['table-select']} (name) VALUES ("${addEl}")`, function (err) {
-      //   if (err) throw err;
-      //   console.log("1 record inserted");
-      //});
+      //console.log(addEl);
+      db.query(`INSERT INTO ${a['table-select']} (${addEl[1]}) VALUES ("${addEl[0]}")`, function (err) {
+        if (err) throw err;
+        console.log("1 record inserted");
+      });
       break;
     default:
       console.log('oops!');
@@ -36,11 +37,11 @@ async function addToTable (tableName) {
   switch (tableName) {
     case 'department':
       result = await inquirer.prompt(i.add_department)
-      return result.departmentName
+      return [result.departmentName, ('name')];
     case 'employee':
       result = await inquirer.prompt(i.add_employee)
-      console.log(result);
-      break
+      //console.log(typeof(parseInt(result.role_id)));
+      return[`${result.first_name}, ${result.last_name}, ${parseInt(result.role_id)}, ${parseInt(result.manager_id)}`, 'first_name, last_name, role_id, manager_id'];
     default:
       console.log('oops');
       break;
