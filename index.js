@@ -20,10 +20,10 @@ async function actionSwitch (a) {
       break;
     case 'Add':
       const addEl = await addToTable(`${a['table-select']}`);
-      db.query(`INSERT INTO ${a['table-select']} (name) VALUES ("${addEl}")`, function (err) {
-        if (err) throw err;
-        console.log("1 record inserted");
-      });
+      // db.query(`INSERT INTO ${a['table-select']} (name) VALUES ("${addEl}")`, function (err) {
+      //   if (err) throw err;
+      //   console.log("1 record inserted");
+      //});
       break;
     default:
       console.log('oops!');
@@ -32,17 +32,19 @@ async function actionSwitch (a) {
 }
 
 async function addToTable (tableName) {
+  let result;
   switch (tableName) {
     case 'department':
-      const result = await inquirer.prompt(i.add_department)
+      result = await inquirer.prompt(i.add_department)
       return result.departmentName
-  
+    case 'employee':
+      result = await inquirer.prompt(i.add_employee)
+      console.log(result);
+      break
     default:
       console.log('oops');
       break;
   }
-const addedDep = await inquirer.prompt(i.add_department);
-return addedDep;
 }
 
 actionHandler();

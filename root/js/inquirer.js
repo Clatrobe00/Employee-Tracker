@@ -17,6 +17,28 @@ const add_department = [{
     message: 'Enter department name'
 }]
 
+const add_employee = [{
+    name: 'firstName',
+    type: 'input',
+    message: "Enter employee's first name:"
+},
+{
+    name: 'lastName',
+    type: 'input',
+    message: "Enter employee's last name:"
+},
+{
+    name: 'roleID',
+    type: 'input',
+    message: "Enter employee's role ID:"
+},
+{
+    name: 'managerID',
+    type: 'input',
+    message: "Enter employee's manager ID (if applicable)"
+}
+]
 
 
-module.exports = {mainPrompt, add_department}
+
+module.exports = {mainPrompt, add_department, add_employee}
