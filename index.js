@@ -8,7 +8,7 @@ const actionSelect = await inquirer.prompt(i.mainPrompt);
 actionSwitch(actionSelect);
 }
 
-const actionSwitch = (a) => {
+async function actionSwitch (a) {
   switch (a['action-select']) {
     case 'View':
       db.query(`SELECT * FROM ${a['table-select']}`, (err, result) => {if (err) throw err;
@@ -19,8 +19,8 @@ const actionSwitch = (a) => {
       console.log(`update ${a['table-select']}`);
       break;
     case 'Add':
-      console.log(`add ${a['table-select']}`);
-      db.query(`INSERT INTO ${a['table-select']} (name) VALUES ('marketing')`, function (err) {
+      const addEl = await addToTable(`${a['table-select']}`);
+      db.query(`INSERT INTO ${a['table-select']} (name) VALUES ("${addEl}")`, function (err) {
         if (err) throw err;
         console.log("1 record inserted");
       });
@@ -29,6 +29,20 @@ const actionSwitch = (a) => {
       console.log('oops!');
       break;
   }
+}
+
+async function addToTable (tableName) {
+  switch (tableName) {
+    case 'department':
+      const result = await inquirer.prompt(i.add_department)
+      return result.departmentName
+  
+    default:
+      console.log('oops');
+      break;
+  }
+const addedDep = await inquirer.prompt(i.add_department);
+return addedDep;
 }
 
 actionHandler();

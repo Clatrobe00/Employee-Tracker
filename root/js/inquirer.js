@@ -11,6 +11,12 @@ const mainPrompt = [{
     choices: ["department", "role", "employee"]
 }];
 
+const add_department = [{
+    name: 'departmentName',
+    type: 'input',
+    message: 'Enter department name'
+}]
 
 
-module.exports = {mainPrompt}
+
+module.exports = {mainPrompt, add_department}
