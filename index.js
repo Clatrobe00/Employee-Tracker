@@ -17,14 +17,22 @@ async function actionSwitch (a) {
       break;
     case 'Update':
       console.log(`update ${a['table-select']}`);
+      db.connect(function(err) {
+        if (err) throw err;
+        var sql = "UPDATE customers SET address = 'Canyon 123' WHERE address = 'Valley 345'";
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log(result.affectedRows + " record(s) updated");
+        });
+      });
       break;
     case 'Add':
       const addEl = await addToTable(`${a['table-select']}`);
-      //console.log(addEl);
-      db.query(`INSERT INTO ${a['table-select']} (${addEl[1]}) VALUES ("${addEl[0]}")`, function (err) {
-        if (err) throw err;
-        console.log("1 record inserted");
-      });
+      console.log(addEl);
+      // db.query(`INSERT INTO ${a['table-select']} (${addEl[1]}) VALUES ("${addEl[0]}")`, function (err) {
+      //   if (err) throw err;
+      //   console.log("1 record inserted");
+      // });
       break;
     default:
       console.log('oops!');
@@ -40,8 +48,7 @@ async function addToTable (tableName) {
       return [result.departmentName, ('name')];
     case 'employee':
       result = await inquirer.prompt(i.add_employee)
-      //console.log(typeof(parseInt(result.role_id)));
-      return[`${result.first_name}, ${result.last_name}, ${parseInt(result.role_id)}, ${parseInt(result.manager_id)}`, 'first_name, last_name, role_id, manager_id'];
+      return[result.first_name, result.last_name, parseInt(result.role_id), parseInt(result.manager_id), 'first_name, last_name, role_id, manager_id'];
     default:
       console.log('oops');
       break;
