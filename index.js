@@ -2,6 +2,11 @@ const inquirer = require('inquirer');
 const i = require('./root/js/inquirer');
 const db = require('./root/js/connection');
 const cTable = require('console.table');
+const util = require('util');
+const { resolve } = require('path');
+
+// node native promisify
+const query = util.promisify(db.query).bind(db);
 
 async function actionHandler () {
 const actionSelect = await inquirer.prompt(i.mainPrompt);
@@ -17,14 +22,10 @@ async function actionSwitch (a) {
       break;
     case 'Update':
       console.log(`update ${a['table-select']}`);
-      db.connect(function(err) {
-        if (err) throw err;
-        var sql = "UPDATE customers SET address = 'Canyon 123' WHERE address = 'Valley 345'";
-        con.query(sql, function (err, result) {
+      db.query(`UPDATE ${a['table-select']} SET address = 'Canyon 123' WHERE address = 'Valley 345'`, (err, result) => {
           if (err) throw err;
           console.log(result.affectedRows + " record(s) updated");
         });
-      });
       break;
     case 'Add':
       const addEl = await addToTable(`${a['table-select']}`);
@@ -58,6 +59,25 @@ async function addToTable (tableName) {
   }
 }
 
-actionHandler();
+//actionHandler();
+
+ async function res () {
+  const results = await query(`SELECT name FROM department`)
+  const fResults = results.map(e => e.name);
+  return(fResults);
+  
+};
+
+res().then(fResults => testQuery(fResults));  
 
 
+
+async function testQuery(results) {
+let answers = await inquirer.prompt([{
+       name: 'update',
+       type: 'list',
+       message: 'select item to update',
+       choices: results
+}]);
+console.log(answers);
+}

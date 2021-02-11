@@ -55,6 +55,13 @@ const add_role = [{
     message: 'Enter department ID for role:'
 }]
 
+// const update_query = [{
+//     name: 'update',
+//     type: 'list',
+//     message: 'select item to update',
+//     choices: `${inqArr}`
+// }]
+
 
 
 module.exports = {mainPrompt, add_department, add_employee, add_role}
