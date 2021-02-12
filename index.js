@@ -21,11 +21,13 @@ async function actionSwitch (a) {
       });
       break;
     case 'Update':
-      console.log(`update ${a['table-select']}`);
-      db.query(`UPDATE ${a['table-select']} SET address = 'Canyon 123' WHERE address = 'Valley 345'`, (err, result) => {
-          if (err) throw err;
-          console.log(result.affectedRows + " record(s) updated");
-        });
+      let identifier = findIdentifier(a['table-select']);
+      let updateVal = await res(a['table-select'], identifier).then(fResults => testQuery(fResults));  
+      const updateEl = await addToTable(`${a['table-select']}`);
+      db.query(`UPDATE ${a['table-select']} SET ${updateEl[1]} = ${updateEl[0]} WHERE ${updateEl[1]} = '${updateVal}'`, (err, result) => {
+           if (err) throw err;
+           console.log(result.affectedRows + " record(s) updated");
+         });
       break;
     case 'Add':
       const addEl = await addToTable(`${a['table-select']}`);
@@ -59,25 +61,49 @@ async function addToTable (tableName) {
   }
 }
 
-//actionHandler();
+actionHandler();
 
- async function res () {
-  const results = await query(`SELECT name FROM department`)
-  const fResults = results.map(e => e.name);
-  return(fResults);
+ async function res (table, identifier) {
+  let results = await query(`SELECT ${identifier} FROM ${table}`);
+  switch (identifier) {
+    case 'first_name':
+      results = results.map(e => e.first_name);
+      break;
+    case 'title':
+      results = results.map(e => e.title);
+      break;
+    case 'name':
+      results = results.map(e => e.name);
+      break;        
+    default:
+      console.log('oops');
+      break;
+  }
+  return(results);
   
 };
 
-res().then(fResults => testQuery(fResults));  
-
-
+const findIdentifier = (tName) => {
+  switch (tName) {
+    case 'employee':
+      return ('first_name');
+    case 'role':
+      return ('title');
+    case 'department':
+      return ('name');     
+    default:
+      console.log('oops');
+      break;
+  }
+}
 
 async function testQuery(results) {
+console.log('tq results are ', results);  
 let answers = await inquirer.prompt([{
        name: 'update',
        type: 'list',
        message: 'select item to update',
        choices: results
 }]);
-console.log(answers);
+return (answers.update);
 }
