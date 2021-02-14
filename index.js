@@ -9,37 +9,47 @@ const { type } = require('os');
 // node native promisify
 const query = util.promisify(db.query).bind(db);
 
- 
 async function actionHandler () {
 const actionSelect = await inquirer.prompt(i.mainPrompt);
-actionSwitch(actionSelect);
+if (actionSelect['action-select'] === 'Exit') {
+  console.log('Logging off');
+  db.end();
+  return
+}
+const tableSelect = await inquirer.prompt(i.secPrompt)
+actionSwitch(actionSelect, tableSelect);
 }
 
 
 
-async function actionSwitch (a) {
+async function actionSwitch (a, b) {
   switch (a['action-select']) {
     case 'View':
-      db.query(`SELECT * FROM ${a['table-select']}`, (err, result) => {if (err) throw err;
-      console.table(result)
+      db.query(`SELECT * FROM ${b['table-select']}`, (err, result) => {if (err) throw err;
+      console.table(result);
       });
+      actionHandler();
       break;
     case 'Update':
       console.log("update");
+      actionHandler();
       break;
     case 'Add':
-      const addEl = await addToTable(`${a['table-select']}`);
+      const addEl = await addToTable(`${b['table-select']}`);
       //console.log(addEl);
-      db.query(`INSERT INTO ${a['table-select']} (${addEl[1]}) VALUES (${addEl[0]})`, function (err) {
+      db.query(`INSERT INTO ${b['table-select']} (${addEl[1]}) VALUES (${addEl[0]})`, function (err) {
         if (err) throw err;
         console.log("1 record inserted");
       });
-      break;
+      actionHandler();
+      break; 
     default:
       console.log('oops!');
       break;
   }
 }
+
+actionHandler();
 
 async function addToTable (tableName) {
   let result;
@@ -59,7 +69,7 @@ async function addToTable (tableName) {
   }
 }
 
-actionHandler();
+
 
  async function res (table, identifier) {
   let results = await query(`SELECT ${identifier} FROM ${table}`);
