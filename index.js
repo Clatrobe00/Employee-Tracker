@@ -4,14 +4,18 @@ const db = require('./root/js/connection');
 const cTable = require('console.table');
 const util = require('util');
 const { resolve } = require('path');
+const { type } = require('os');
 
 // node native promisify
 const query = util.promisify(db.query).bind(db);
 
+ 
 async function actionHandler () {
 const actionSelect = await inquirer.prompt(i.mainPrompt);
 actionSwitch(actionSelect);
 }
+
+
 
 async function actionSwitch (a) {
   switch (a['action-select']) {
@@ -21,13 +25,7 @@ async function actionSwitch (a) {
       });
       break;
     case 'Update':
-      let identifier = findIdentifier(a['table-select']);
-      let updateVal = await res(a['table-select'], identifier).then(fResults => testQuery(fResults));  
-      const updateEl = await addToTable(`${a['table-select']}`);
-      db.query(`UPDATE ${a['table-select']} SET ${updateEl[1]} = ${updateEl[0]} WHERE ${updateEl[1]} = '${updateVal}'`, (err, result) => {
-           if (err) throw err;
-           console.log(result.affectedRows + " record(s) updated");
-         });
+      console.log("update");
       break;
     case 'Add':
       const addEl = await addToTable(`${a['table-select']}`);
@@ -83,27 +81,27 @@ actionHandler();
   
 };
 
-const findIdentifier = (tName) => {
-  switch (tName) {
-    case 'employee':
-      return ('first_name');
-    case 'role':
-      return ('title');
-    case 'department':
-      return ('name');     
-    default:
-      console.log('oops');
-      break;
-  }
-}
+// const findIdentifier = (tName) => {
+//   switch (tName) {
+//     case 'employee':
+//       return ('first_name');
+//     case 'role':
+//       return ('title');
+//     case 'department':
+//       return ('name');     
+//     default:
+//       console.log('oops');
+//       break;
+//   }
+// }
 
-async function testQuery(results) {
-console.log('tq results are ', results);  
-let answers = await inquirer.prompt([{
-       name: 'update',
-       type: 'list',
-       message: 'select item to update',
-       choices: results
-}]);
-return (answers.update);
-}
+// async function testQuery(results) {
+// console.log('tq results are ', results);  
+// let answers = await inquirer.prompt([{
+//        name: 'update',
+//        type: 'list',
+//        message: 'select item to update',
+//        choices: results
+// }]);
+// return (answers.update);
+// }
